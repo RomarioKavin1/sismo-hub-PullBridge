@@ -240,7 +240,7 @@ export class ApiService {
             fs.writeFileSync(indexPath, updatedContent, "utf-8");
           }
         };
-        const runYarnCommand = (command: string) => {
+        const runCommand = (command: string) => {
           try {
             execSync(command, { stdio: "inherit" });
           } catch (error) {
@@ -271,10 +271,14 @@ export class ApiService {
         };
         addGeneratorImport(name);
         updateGroupGenerators(name);
-        runYarnCommand(`yarn generate-group ${name}`);
+        runCommand(`yarn generate-group ${name}`);
+        runCommand(`git checkout -b ${name}`)
+        runCommand(`git add .`)
+        runCommand(`git commit -m "feat: add ${name} group"`)
+        runCommand(`git push origin ${name}`)
         const url=await getGroupDataUrl(name);
         const host = request.hostname;
-        reply.code(201).send({ message: 'Data group created successfully',url:host+url });
+        reply.code(201).send({ message: 'Data group creation Pull request sent successfully',url:host+url });
       } catch (error) {
         console.error('Error creating data group:', error);
         reply.code(500).send({ error: 'Internal Server Error' });
