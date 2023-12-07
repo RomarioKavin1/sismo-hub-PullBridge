@@ -276,6 +276,7 @@ export class ApiService {
         runCommand(`git add .`)
         runCommand(`git commit -m "feat: add ${name} group"`)
         runCommand(`git push origin ${name}`)
+        // runCommand(`gh pr create --title "feat:${name} Generator" --body "${description}" `)
         const url=await getGroupDataUrl(name);
         const host = request.hostname;
         reply.code(201).send({ message: 'Data group creation Pull request sent successfully',url:host+url });
